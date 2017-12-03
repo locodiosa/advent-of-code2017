@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }     
+
+    function getResult() { 
+      var value = 1;
+      var x = 0;
+      var y = 0;
+      var width = 1;
+      var height = 1;
+      var dir = 0;      
+      var step = 0;
+
+      while (value < input) {        
+        if (dir == 0) {
+          ++x;
+          ++step;
+          ++value;
+
+          if (step == width) {
+            ++dir;            
+            ++width;
+            step = 0;
+          }                   
+
+        } else if (dir == 1) {
+          --y;
+          ++step;
+          ++value;
+
+          if (step == height) {
+            ++dir;
+            ++height;
+            step = 0;
+          }
+
+        } else if (dir == 2) {
+          --x;
+          ++step;
+          ++value;
+
+          if (step == width) {
+            ++dir;
+            ++width;
+            step = 0;
+          }
+
+        } else if (dir == 3) {
+          ++y;
+          ++step;
+          ++value;
+
+          if (step == height) {
+            ++dir;
+            ++height;
+            step = 0;
+          }
+
+        } else if (dir > 3) {
+          dir = 0;
+        }          
+      }
+     
+      return Math.abs(x) + Math.abs(y);
+    }
+
+  var input = 361527;
+
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
