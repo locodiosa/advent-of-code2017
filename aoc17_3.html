@@ -18,58 +18,60 @@
       var dir = 0;      
       var step = 0;
 
-      while (value < input) {        
+      var squares = [];
+      var value2 = 1;
+      squares["0:0"] = 1;
+
+      while (value < input) {              
+        ++step;
+        ++value;       
+
         if (dir == 0) {
           ++x;
-          ++step;
-          ++value;
+        } else if (dir == 1) {
+          --y; 
+        } else if (dir == 2) {
+          --x;
+        } else if (dir == 3) {
+          ++y;
+        }
 
-          if (step == width) {
+        if (step == width && (dir == 0 || dir == 2)) {
             ++dir;            
             ++width;
             step = 0;
-          }                   
+        } 
 
-        } else if (dir == 1) {
-          --y;
-          ++step;
-          ++value;
-
-          if (step == height) {
-            ++dir;
+        if (step == height && (dir == 1 || dir == 3)) {
+            ++dir;            
             ++height;
             step = 0;
-          }
+        } 
 
-        } else if (dir == 2) {
-          --x;
-          ++step;
-          ++value;
-
-          if (step == width) {
-            ++dir;
-            ++width;
-            step = 0;
-          }
-
-        } else if (dir == 3) {
-          ++y;
-          ++step;
-          ++value;
-
-          if (step == height) {
-            ++dir;
-            ++height;
-            step = 0;
-          }
-
-        } else if (dir > 3) {
+        if (dir > 3) {
           dir = 0;
+        } 
+
+        if (value2 <= input) {
+          value2 = squares[x + ":" + y] = getValue(squares, x, y);
         }          
       }
      
-      return Math.abs(x) + Math.abs(y);
+      return (Math.abs(x) + Math.abs(y)) + ", " + value2;
     }
+
+    function getValue(squares, x, y) {      
+      return (squares[(x - 1) + ":" + (y + 0)] || 0) +
+             (squares[(x + 1) + ":" + (y + 0)] || 0) + 
+             (squares[(x + 0) + ":" + (y - 1)] || 0) +
+             (squares[(x + 0) + ":" + (y + 1)] || 0) + 
+             (squares[(x - 1) + ":" + (y - 1)] || 0) +
+             (squares[(x + 1) + ":" + (y + 1)] || 0) +
+             (squares[(x - 1) + ":" + (y + 1)] || 0) +
+             (squares[(x + 1) + ":" + (y - 1)] || 0);    
+    }
+
+        
 
   var input = 361527;
 
