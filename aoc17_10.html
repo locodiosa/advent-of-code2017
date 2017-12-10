@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult1() + ", " + getResult2();
+    }       
+
+    function getResult1() { 
+      let list = roundHash(input, 1);
+      return list[0] * list[1]; 
+    }
+
+    function getResult2() {
+      let inputCode = [];
+
+      for (let i = 0; i < input.length; ++i) {
+        inputCode[i] = input.charCodeAt(i);
+      }
+
+      inputCode.push(17, 31, 73, 47, 23);
+      inputCode = inputCode.join(",");
+
+      let list = roundHash(inputCode, 64);
+      
+      let hash = [];
+
+      for (let i = 0; i < list.length; i += 16) {
+        let outputNumber = 0;
+
+        for (let j = i; j < i + list.length / 16; ++j) {
+          outputNumber ^= list[j];          
+        }
+
+        hash.push(outputNumber);
+      }
+      
+      let knotHash = hash.map(function(elem) {
+        if (elem.toString(16).length == 2) {
+          return elem.toString(16);
+        } else {
+          return "0" + elem.toString(16); 
+        }
+      }).join("");
+     
+      return knotHash;
+    }
+
+    function roundHash(input, times) {      
+      let list = [...Array(256).keys()];
+      let currPos = 0;
+      let skipSize = 0;
+
+      for (let t = 1; t <= times; ++t) {
+        input.split(",").forEach(function(length) {
+          length = +length;        
+          let listPlus = [...list, ...list];
+          let listReverse = listPlus.slice(currPos, currPos + length).reverse();        
+          let pos = currPos % list.length;       
+
+          for (let i = 0; i < listReverse.length; ++i) {
+            list[pos % list.length] = listReverse[i];
+            ++pos;
+          }
+        
+          currPos = (currPos + length + skipSize) % list.length;
+          ++skipSize;                  
+        });
+      }      
+
+      return list;      
+    } 
+
+  let input = "225,171,131,2,35,5,0,13,1,246,54,97,255,98,254,110";
+
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
