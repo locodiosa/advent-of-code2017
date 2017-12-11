@@ -45,10 +45,7 @@
         }
 
         steps = (Math.abs(x) + Math.abs(y) + Math.abs(z)) / 2;
-
-        if (steps > furthestPos) {
-          furthestPos = steps;
-        }
+        furthestPos = Math.max(steps, furthestPos);
       });     
      
       return steps + ", " + furthestPos;
