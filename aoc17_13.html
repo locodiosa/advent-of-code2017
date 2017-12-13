@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }     
+
+    function getResult() {      
+      let list = [];
+
+      for (let i = 0; i <= 98; ++i) {
+        list[i] = 0;
+      }
+
+      input.split("\n").forEach(line => list[parseInt(line.slice(0, line.indexOf(":")))] = parseInt(line.slice(line.indexOf(":") + 2)));
+
+      let seconds = 0;
+      let caughts = 0;      
+      
+      for (let i = 0; i < list.length; ++i) {        
+        if ((list[i] != 0) && (seconds % ((list[i] - 1) * 2) == 0)) {
+          caughts += (i * list[i]);         
+        }    
+
+        ++seconds;        
+      }
+
+      let start = 0;
+
+      for (let found = false; !found;) {
+        seconds = start;
+        let caughts2 = 0;
+
+        for (let i = 0; i < list.length; ++i) {               
+          if ((seconds % ((list[i] - 1) * 2) == 0) && (list[i] != 0)) {
+          //console.log("sec: " + seconds + ", " + i + ": " + list[i]);             
+            ++caughts2;     
+          }    
+
+          ++seconds; 
+        }
+
+        if (caughts2 == 0) {          
+          found = true;
+        } else {
+          ++start;
+        }       
+      }
+     
+      return caughts + ", " + start;         
+    }
+
+  let input = `0: 4
+1: 2
+2: 3
+4: 5
+6: 6
+8: 6
+10: 4
+12: 8
+14: 8
+16: 9
+18: 8
+20: 6
+22: 6
+24: 8
+26: 12
+28: 12
+30: 12
+32: 10
+34: 8
+36: 8
+38: 10
+40: 12
+42: 12
+44: 12
+46: 14
+48: 14
+50: 14
+52: 14
+54: 12
+56: 12
+58: 12
+60: 12
+62: 14
+64: 14
+66: 14
+68: 14
+70: 14
+80: 14
+82: 14
+86: 14
+88: 17
+94: 30
+98: 18` 
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
