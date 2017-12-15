@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }     
+
+    function getResult() {
+      let count = 0;
+      let count2 = 0;
+
+      let generators = input.split("\n").map(line => +line.slice(line.indexOf("with") + 5));      
+
+      let a = generators[0];
+      let b = generators[1];
+
+      const factorA = 16807;
+      const factorB = 48271;
+      const divisor = 2147483647;
+      const check = 40000000; 
+      const check2 = 5000000;  
+      const mask = ((1 << 16) - 1);             
+      
+      for (let i = 1; i <= check; ++i) {
+        a = (a * factorA) % divisor;
+        b = (b * factorB) % divisor;        
+
+        if ((a & mask) == (b & mask)) {
+          ++count;
+        }
+      }
+
+      a = generators[0];
+      b = generators[1];
+      
+      let pair = 0;      
+
+      while (pair < check2) {
+        do {
+          a = (a * factorA) % divisor;
+        } while (a % 4 != 0) 
+        
+        do {
+          b = (b * factorB) % divisor;
+        } while (b % 8 != 0)           
+
+        if ((a & mask) == (b & mask)) {
+          ++count2;                    
+        }
+
+        ++pair;
+      }        
+     
+      return count + ", " + count2; 
+    }
+
+  var input = `Generator A starts with 116
+Generator B starts with 299`;
+
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
