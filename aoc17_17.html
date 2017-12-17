@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }     
+
+    function getResult() {
+      let buffer = [0];
+      let currPos = 0;
+      const steps = +input;
+
+      while (currPos < 2017) {        
+        buffer.splice((((buffer.indexOf(currPos) + steps) % buffer.length) + 1), 0, currPos + 1);
+        ++currPos;              
+      }
+
+      let count = 0;
+      let size = 1;
+      let pos = 0;
+      let pos1 = null;
+
+      while (count < 50000000) {  
+        ++count;
+        pos = (pos + steps) % size + 1;
+
+        if (pos == 1) {
+          pos1 = count;
+        } 
+                  
+        ++size;      
+      }
+      
+      return buffer[buffer.indexOf((currPos) % buffer.length) + 1] + ", " + pos1;
+    }
+
+  let input = "345";
+
+  </script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
