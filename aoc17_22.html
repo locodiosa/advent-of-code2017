@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {
+      const square = input.split("\n").map(l => l.split(""));      
+      const y = Math.floor(square.length / 2);
+      const x = Math.floor(square[0].length / 2);
+
+      document.getElementById("result").innerHTML = 
+        getResult1(getGrid(square), x, y) + ", " + getResult2(getGrid(square), x, y);
+    }  
+
+    function getGrid(square) {
+      let grid = {};
+
+      for (let i = 0; i < square.length; ++i) {
+        for (let j = 0; j < square[i].length; ++j) {
+          if (square[i][j] == "#") {
+            grid[i + "," + j] = "i";
+          }
+        }
+      }
+
+      return grid;
+    }        
+
+    function getResult1(grid, x, y) {
+      let dy = -1;
+      let dx = 0;
+      let burstInfect = 0;
+
+      for (let burst = 0; burst < 10000; ++burst) {
+        let key = y + "," + x;
+        
+        if (grid[key] != undefined) {
+          [dx, dy] = [-dy, dx];
+          grid[key] = undefined;          
+
+        } else {
+          [dx, dy] = [dy, -dx];
+          grid[key] = "i";
+          ++burstInfect;
+        }        
+
+        y += dy;
+        x += dx;  
+      }
+
+      return burstInfect;     
+    }
+
+    function getResult2(grid, x, y) {     
+      let dy = -1;
+      let dx = 0;
+      let burstInfect = 0;
+
+      for (let burst = 0; burst < 10000000; ++burst) {       
+        let key = y + "," + x;
+        
+        if (grid[key] == "i") {
+          [dx, dy] = [-dy, dx];
+          grid[key] = "f";          
+
+        } else if (grid[key] == "f") {
+          [dx, dy] = [-dx, -dy];
+          grid[key] = "c";          
+
+        } else if (grid[key] == "w") {
+          grid[key] = "i";
+          ++burstInfect;
+
+        } else {
+          [dx, dy] = [dy, -dx];
+          grid[key] = "w";
+        }     
+
+        y += dy;
+        x += dx; 
+      }
+
+      return burstInfect;     
+    }
+
+  let input = `#..#...##.#.###.#.#.#...#
+.####....#..##.#.##....##
+...#..#.#.#......##..#..#
+##.####.#.##........#...#
+##.#....##..#.####.###...
+#..#..###...#.#..##..###.
+.##.##..#.####.#.#.....##
+#....#......######...#...
+..#.#.##.#..#...##.#.####
+#.#..#.....#..####.#.#.##
+...##.#..##.###.###......
+###..#.####.#..#####..#..
+...##.##.#.###.#..##.#.##
+.####.#.##.#####.##.##..#
+#.##.#...##.#.###.###..#.
+..#.#..#..#..##..###...##
+##.##.#..#.###....###..##
+.#...###..#####.#..#.#.##
+....##..####.##...#..#.##
+#..#..###..#..###...#..##
+.##.#.###..####.#.#..##.#
+..###.#....#...###...##.#
+.#...##.##.####...##.####
+###.#.#.####.##.###..#...
+#.#######.#######..##.#.#`;
+
+  </script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
