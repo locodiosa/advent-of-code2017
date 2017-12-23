@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function isNumeric(n) {return !isNaN(parseFloat(n)) && isFinite(n);} 
+    
+    function calc() {
+      document.getElementById("result").innerHTML = getResult() + ", " + part2();      
+    } 
+
+    let regs = {a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, g: 0, h: 0, mul: 0};
+    
+    function getResult() {
+      let code = input.split("\n").map(line => line);      
+      
+      for (let i = 0; i < code.length; i = parseCode(code, i, regs)) {        
+      }
+
+      return regs.mul;
+    }
+    
+    function parseCode(code, i, regs) {  
+      let instr = code[i].split(" ");
+      let next = i + 1;          
+
+      switch (instr[0]) {
+        case "set":
+          if (isNumeric(instr[2])) {
+            regs[instr[1]] = +instr[2];
+          } else {
+            regs[instr[1]] = regs[instr[2]];
+          }          
+          break;
+
+        case "sub":
+          if (isNumeric(instr[2])) {
+            regs[instr[1]] -= +instr[2];
+          } else {
+            regs[instr[1]] -= regs[instr[2]];
+          }          
+          break;
+
+        case "mul":
+          if (isNumeric(instr[2])) {
+            regs[instr[1]] *= +instr[2];            
+          } else {
+            regs[instr[1]] *= regs[instr[2]];
+          }
+
+          ++regs.mul;
+          break;
+
+        case "jnz":        
+          if ((isNumeric(instr[1]) && +instr[1] != 0) || (!isNumeric(instr[1]) && regs[instr[1]] != 0)) {
+            next = i + (+instr[2]);
+          }
+          break;
+      }
+
+      return next;
+    }
+
+    function part2() {      
+      let h = 0;
+    
+      for (let b = 106500; b <= 106500 + 17000; b += 17) {
+        for (let d = 2; d != b; ++d) {     
+          if ((b % d) == 0) {
+            ++h;
+            break;
+          }               
+        }      
+      }
+
+      return h;
+    }
+
+  let input = `set b 65
+set c b
+jnz a 2
+jnz 1 5
+mul b 100
+sub b -100000
+set c b
+sub c -17000
+set f 1
+set d 2
+set e 2
+set g d
+mul g e
+sub g b
+jnz g 2
+set f 0
+sub e -1
+set g e
+sub g b
+jnz g -8
+sub d -1
+set g d
+sub g b
+jnz g -13
+jnz f 2
+sub h -1
+set g b
+sub g c
+jnz g 2
+jnz 1 3
+sub b -17
+jnz 1 -23`;
+
+  </script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
