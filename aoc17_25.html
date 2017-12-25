@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }
+
+    let begin = null;
+    let numberOfSteps = null;
+    
+    function getResult() {      
+      let blueprint = parseInput();
+      let tape = {};
+      let curPos = 0;
+      let cv = 0;
+      
+      for (let steps = 0; steps < numberOfSteps; ++steps) {
+        tape[curPos] = blueprint[begin]["instr"][cv]["nv"];
+                
+        curPos += blueprint[begin]["instr"][cv]["move"];
+        begin = blueprint[begin]["instr"][cv]["next"];
+        cv = (tape[curPos] == undefined) ? 0 : tape[curPos];        
+      }
+
+      let sum = 0;
+
+      for (let key in tape) {
+        sum += tape[key];
+      }
+
+      return sum;
+    }
+
+    function parseInput() {
+      let blueprint = {};
+      let state = null;      
+      let curValue = null;
+
+      input.split("\n").forEach(l => {
+        if (l.indexOf("Begin") != -1) {
+          begin = l[l.length - 2];
+        }
+
+        if (l.indexOf("steps") != -1) {
+          numberOfSteps = +l.slice(l.indexOf("after") + 6, l.indexOf(" steps"));
+        }
+
+        if (l.indexOf("In state") != -1) {
+          blueprint[l[l.length - 2]] = {};
+          state = l[l.length - 2];
+          blueprint[state]["state"] = l[l.length - 2];
+        }
+
+        if (l.indexOf("current value")  != -1 && l[l.length - 2] == "0") {
+          blueprint[state]["instr"] = [];          
+          blueprint[state]["instr"][0] = {};
+          blueprint[state]["instr"][0]["cv"] = +l[l.length - 2];
+          curValue = 0;
+        }
+
+        if (l.indexOf("current value")  != -1 && l[l.length - 2] == "1") {
+          blueprint[state]["instr"][1] = {};
+          blueprint[state]["instr"][1]["cv"] = +l[l.length - 2];
+          curValue = 1;
+        }
+
+        if (l.indexOf("Write the value") != -1 && curValue == 0) {
+          blueprint[state]["instr"][0]["nv"] = +l[l.length - 2];
+        }
+
+        if (l.indexOf("Write the value") != -1 && curValue == 1) {
+          blueprint[state]["instr"][1]["nv"] = +l[l.length - 2];
+        }
+
+        if (l.indexOf("right") != -1 && curValue == 0) {
+          blueprint[state]["instr"][0]["move"] = 1;
+        }
+
+        if (l.indexOf("right") != -1 && curValue == 1) {
+          blueprint[state]["instr"][1]["move"] = 1;
+        }
+
+        if (l.indexOf("left") != -1 && curValue == 0) {
+          blueprint[state]["instr"][0]["move"] = -1;
+        }
+
+        if (l.indexOf("left") != -1 && curValue == 1) {
+          blueprint[state]["instr"][1]["move"] = -1;
+        }
+
+        if (l.indexOf("Continue") != -1 && curValue == 0) {
+          blueprint[state]["instr"][0]["next"] = l[l.length - 2];
+        }
+
+        if (l.indexOf("Continue") != -1 && curValue == 1) {
+          blueprint[state]["instr"][1]["next"] = l[l.length - 2];
+        }
+      });
+
+      return blueprint;
+    }
+
+  const input = `Begin in state A.
+Perform a diagnostic checksum after 12208951 steps.
+
+In state A:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the right.
+    - Continue with state B.
+  If the current value is 1:
+    - Write the value 0.
+    - Move one slot to the left.
+    - Continue with state E.
+
+In state B:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state C.
+  If the current value is 1:
+    - Write the value 0.
+    - Move one slot to the right.
+    - Continue with state A.
+
+In state C:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state D.
+  If the current value is 1:
+    - Write the value 0.
+    - Move one slot to the right.
+    - Continue with state C.
+
+In state D:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state E.
+  If the current value is 1:
+    - Write the value 0.
+    - Move one slot to the left.
+    - Continue with state F.
+
+In state E:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state A.
+  If the current value is 1:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state C.
+
+In state F:
+  If the current value is 0:
+    - Write the value 1.
+    - Move one slot to the left.
+    - Continue with state E.
+  If the current value is 1:
+    - Write the value 1.
+    - Move one slot to the right.
+    - Continue with state A.`;
+
+  </script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
