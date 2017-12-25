@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();      
+    }
+    
+    function getResult() {      
+      const comps = input.split("\n").map(line => line.split("/").map(Number));
+      
+      let allBridges = getAllBridges(comps, [], []);
+
+      let info = allBridges.map(b => [b.reduce((sum, e) => sum + e[0] + e[1], 0), b.length]);
+      let part1 = info.reduce((max, e) => Math.max(max, e[0]), 0);
+      
+      let lengthMax = info.reduce((max, e) => Math.max(max, e[1]), 0);
+      let part2 = info.filter(e => e[1] == lengthMax)
+        .reduce((max, e) => Math.max(max, e[0]), 0);
+
+      return part1 + ", " + part2;
+    }
+
+    function getAllBridges(comps, bridge, allBridges) {
+      let backEnd = (bridge.length == 0) ? 0 : bridge[bridge.length - 1][1];
+      let candidates = comps.filter(c => c.indexOf(backEnd) != -1);
+
+      if (candidates.length == 0) {
+        allBridges.push(bridge);
+      } else {
+        candidates.forEach(c => {
+          let newBridge = [...bridge, (c[0] == backEnd) ? c : c.reverse()];
+          let newComps = [...comps];
+          newComps.splice(newComps.indexOf(c), 1);
+          getAllBridges(newComps, newBridge, allBridges);
+        });
+      }
+      return allBridges;
+    }
+
+    
+
+  const input2 = `0/2
+2/2
+2/3
+3/4
+3/5
+0/1
+10/1
+9/10`;
+
+  const input = `14/42
+2/3
+6/44
+4/10
+23/49
+35/39
+46/46
+5/29
+13/20
+33/9
+24/50
+0/30
+9/10
+41/44
+35/50
+44/50
+5/11
+21/24
+7/39
+46/31
+38/38
+22/26
+8/9
+16/4
+23/39
+26/5
+40/40
+29/29
+5/20
+3/32
+42/11
+16/14
+27/49
+36/20
+18/39
+49/41
+16/6
+24/46
+44/48
+36/4
+6/6
+13/6
+42/12
+29/41
+39/39
+9/3
+30/2
+25/20
+15/6
+15/23
+28/40
+8/7
+26/23
+48/10
+28/28
+2/13
+48/14`;
+
+  </script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>  
+</body>
+</html>
